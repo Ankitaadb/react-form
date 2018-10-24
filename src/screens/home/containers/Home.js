@@ -45,6 +45,24 @@ class HomeContainer extends Component {
                                     minLength: 5,
                                     maxLength: 20
                                 }
+                            },
+                            address: {
+                                properties: {
+                                    houseNumber: {
+                                        type: 'integer',
+                                        title: 'House number',
+                                        validations: {
+                                            required: true
+                                        }
+                                    },
+                                    street: {
+                                        type: 'string',
+                                        title: 'Street',
+                                        validations: {
+                                            required: true
+                                        }
+                                    }
+                                }
                             }
                         },
                         title: 'location'
@@ -65,7 +83,7 @@ class HomeContainer extends Component {
     renderForm = (properties, parent, errors) => {
         const { types } = this.state
         return (
-            <div>{parent ? <p>{parent}</p> : null}
+            <div>{parent ? <p>{parent.split('.')[parent.split('.').length -1]}</p> : null}
                 <div className={`form-row ${parent ? ' border-box' : ''}`}>
                     {Object.keys(properties).map((data, index) =>
                         properties[data].type ?
@@ -79,7 +97,7 @@ class HomeContainer extends Component {
                                     </div> : null}
                                 </div>
                             </div> :
-                            this.renderForm(properties[data].properties, data, errors ? errors[data] : '')
+                            this.renderForm(properties[data].properties, parent ? parent + '.' + data : data, errors ? errors[data] : '')
 
                     )
                     }
@@ -156,15 +174,15 @@ class HomeContainer extends Component {
 
 
     handleSubmit = () => {
-        const { formValues, formErrors } = this.state
-        if (this.test())
+        const { formErrors } = this.state
+        if (this.validateForm())
             return
         if (Object.keys(formErrors).length > 0) {
             return
         }
     }
 
-    test = () => {
+    validateForm = () => {
         let inputs = document.forms.namedItem('myform').getElementsByTagName('input')
         let isInvalid = false
         for (let i = 0; i < inputs.length; i++) {
