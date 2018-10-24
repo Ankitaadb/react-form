@@ -1,11 +1,11 @@
 import React from 'react';
 
-const HomeComponent = ({ renderForm, handleSubmit, schema }) => {
+const HomeComponent = ({ renderForm, handleSubmit, schema, formErrors }) => {
     return (
         <div className="container">
             <div>
-                <form noValidate>
-                    {renderForm(schema.properties, '')}
+                <form id="myform">
+                    {renderForm(schema.properties, '', formErrors)}
                     <button type="button" className="btn btn-primary" onClick={handleSubmit}>Submit</button>
                 </form>
             </div>
