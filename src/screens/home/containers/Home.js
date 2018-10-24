@@ -10,7 +10,7 @@ class HomeContainer extends Component {
                 properties: {
                     name: {
                         type: 'string',
-                        title: 'Name of Person',
+                        title: 'Name',
                         validations: {
                             required: true,
                             minLength: 5,
@@ -64,20 +64,30 @@ class HomeContainer extends Component {
 
     renderForm = (properties, parent, errors) => {
         const { types } = this.state
-        return Object.keys(properties).map((data, index) =>
-            properties[data].type ?
-                <div className="form-group" key={index}>
-                    <label>{properties[data].title}</label>
-                    <input type={types[[properties[data].type]]} className={`form-control${errors && errors[data] ? ' form-error' : ''}`} data-validations={JSON.stringify(properties[data].validations)} name={parent ? `${parent}.${data}` : data}
-                        onChange={event => this.handleChange(event.target.name, event.target.value, event.target.attributes['data-validations'])} />
-                    {errors ? <div className="error">
-                        {errors[data]}
-                    </div> : null}
-                </div> :
-                this.renderForm(properties[data].properties, data, errors ? errors[data] : '')
+        return (
+            <div>{parent ? <p>{parent}</p> : null}
+                <div className={`form-row ${parent ? ' border-box' : ''}`}>
+                    {Object.keys(properties).map((data, index) =>
+                        properties[data].type ?
+                            <div className="col-md-12">
 
-        )
+                                <div className="form-group" key={index}>
+                                    <input type={types[[properties[data].type]]} placeholder={properties[data].title} className={`form-control input-line${errors && errors[data] ? ' form-error' : ''}`} data-validations={JSON.stringify(properties[data].validations)} name={parent ? `${parent}.${data}` : data}
+                                        onChange={event => this.handleChange(event.target.name, event.target.value, event.target.attributes['data-validations'])} />
+                                    {errors ? <div className="error">
+                                        {errors[data]}
+                                    </div> : null}
+                                </div>
+                            </div> :
+                            this.renderForm(properties[data].properties, data, errors ? errors[data] : '')
+
+                    )
+                    }
+
+                </div>
+            </div>)
     }
+
 
     handleChange = (key, value, attributes) => {
         let { formValues, formErrors } = this.state
@@ -159,7 +169,7 @@ class HomeContainer extends Component {
         let isInvalid = false
         for (let i = 0; i < inputs.length; i++) {
             if (inputs[i].value === '') {
-                setTimeout(() => this.handleChange(inputs[i].name, inputs[i].value, inputs[i].attributes['data-validations']), 10*i)
+                setTimeout(() => this.handleChange(inputs[i].name, inputs[i].value, inputs[i].attributes['data-validations']), 10 * i)
                 isInvalid = true
             }
         }
